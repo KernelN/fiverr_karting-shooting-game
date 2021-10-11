@@ -6,6 +6,7 @@ public class Enemy : Kart
     internal enum MachineState { SEARCH, FOLLOW }
 
     [SerializeField] Transform player;
+    [SerializeField] GameObject explosionEffect;
     internal MachineState state;
     NavMeshAgent navMesh;
 
@@ -55,6 +56,8 @@ public class Enemy : Kart
     internal override void KartDestroyed()
     {
         KartDied.Invoke(this); //warn kartManager
+        GameObject explosion = Instantiate(explosionEffect, transform);
+        explosion.transform.parent = transform.parent;
         Destroy(gameObject);
     }
 }
