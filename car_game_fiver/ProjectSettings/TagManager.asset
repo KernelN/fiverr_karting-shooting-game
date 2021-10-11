@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Checkpoint
   - Enemy
+  - CrashMode
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - CrashObject
   - Kart
   - TrainingCheckpoints
-  - 
+  - Enemy
   - 
   - 
   - 

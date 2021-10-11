@@ -23,11 +23,10 @@ using UnityEngine;
 
      }
      void HitTarget(){
-         Debug.Log("we hit something");
-         GameObject effectIns = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
-         Destroy(effectIns, 2f);
-         Destroy(gameObject);
-         
-     }
-     
- }
+        Debug.Log("we hit something");
+        target.GetComponent<IHittable>()?.Hitted();
+        GameObject effectIns = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
+        Destroy(effectIns, 2f);
+        Destroy(gameObject);
+    }
+}

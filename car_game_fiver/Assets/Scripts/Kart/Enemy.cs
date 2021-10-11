@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Kart
 {
     internal enum MachineState { SEARCH, FOLLOW }
 
@@ -50,5 +50,15 @@ public class Enemy : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    internal override void KartDestroyed()
+    {
+        //warn kartManager
+        GameManager gameManger = GameManager.Get();
+        gameManger.score++;
+        gameManger.playerWon = true;
+        gameManger.EndGame();
+        Destroy(gameObject);
     }
 }
