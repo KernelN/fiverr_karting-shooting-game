@@ -54,11 +54,7 @@ public class Enemy : Kart
 
     internal override void KartDestroyed()
     {
-        //warn kartManager
-        GameManager gameManger = GameManager.Get();
-        gameManger.score++;
-        gameManger.playerWon = true;
-        gameManger.EndGame();
+        KartDied.Invoke(this); //warn kartManager
         Destroy(gameObject);
     }
 }

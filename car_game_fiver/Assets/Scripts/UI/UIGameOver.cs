@@ -1,14 +1,30 @@
 using UnityEngine;
-//using TMPro;
+using TMPro; //used for score only
 
 public class UIGameOver : MonoBehaviour
 {
     [SerializeField] GameObject victoryText;
     [SerializeField] GameObject defeatText;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] bool gameUsesScore = true;
+    GameManager gameManager;
 
     void Start()
     {
-        if (GameManager.Get().playerWon)
+        //Game Manager
+        gameManager = GameManager.Get();
+
+        //Victory / Defeat
+        SetVictoryDefeat();
+
+        if (!gameUsesScore) return;
+        //Score
+        SetScore();
+    }
+
+    void SetVictoryDefeat()
+    {
+        if (gameManager.playerWon)
         {
             victoryText.SetActive(true);
         }
@@ -16,5 +32,9 @@ public class UIGameOver : MonoBehaviour
         {
             defeatText.SetActive(true);
         }
+    }
+    void SetScore()
+    {
+        scoreText.text = "Score: " + gameManager.score.ToString("000");
     }
 }

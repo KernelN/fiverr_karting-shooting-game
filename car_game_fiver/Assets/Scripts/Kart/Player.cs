@@ -6,15 +6,7 @@ public class Player : Kart
 {
     internal override void KartDestroyed()
     {
-        GameManager gameManager = GameManager.Get();
-        if(!gameManager)
-        {
-            Destroy(gameObject);
-            return; 
-        }
-
-        gameManager.playerWon = false;
-        gameManager.EndGame();
+        KartDied.Invoke(this); //warn kartManager
         Destroy(gameObject);
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Kart : MonoBehaviour, IHittable
 {
     public int health;
+    public Action<Kart> KartDied;
 
     public void Hitted()
     {
