@@ -155,7 +155,7 @@ namespace KartGame.KartSystems
         public LayerMask GroundLayers = Physics.DefaultRaycastLayers;
 
         // the input sources that can control the kart
-        IInput[] m_Inputs;
+        public IInput m_Input;
 
         const float k_NullInput = 0.01f;
         const float k_NullSpeed = 0.01f;
@@ -234,7 +234,6 @@ namespace KartGame.KartSystems
         void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
-            m_Inputs = GetComponents<IInput>();
 
             UpdateSuspensionParams(FrontLeftWheel);
             UpdateSuspensionParams(FrontRightWheel);
@@ -262,6 +261,11 @@ namespace KartGame.KartSystems
                     Instantiate(NozzleVFX, nozzle, false);
                 }
             }
+        }
+
+        private void Start()
+        {
+            //m_Inputs = GetComponents<IInput>();
         }
 
         void AddTrailToWheel(WheelCollider wheel)
@@ -328,11 +332,11 @@ namespace KartGame.KartSystems
             WantsToDrift = false;
 
             // gather nonzero input from our sources
-            for (int i = 0; i < m_Inputs.Length; i++)
-            {
-                Input = m_Inputs[i].GenerateInput();
+            //for (int i = 0; i < m_Inputs.Length; i++)
+            //{
+                Input = m_Input.GenerateInput();
                 WantsToDrift = Input.Brake && Vector3.Dot(Rigidbody.velocity, transform.forward) > 0.0f;
-            }
+            //}
         }
 
         void TickPowerups()
