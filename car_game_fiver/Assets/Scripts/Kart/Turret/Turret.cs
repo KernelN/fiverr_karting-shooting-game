@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
+
 public class Turret : MonoBehaviour
 {
     [SerializeField] private Transform target = null;
@@ -153,6 +152,11 @@ public class Turret : MonoBehaviour
         GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Bullet bullet = bulletGO.GetComponent<Bullet>();
         bullet.Seek(target);
+    }
+
+    public void TurnManualShoot()
+    {
+        manualShootIsOn = !manualShootIsOn;
     }
 
     void OnDrawGizmosSelected()
