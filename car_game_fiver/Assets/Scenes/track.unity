@@ -7499,6 +7499,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9104306325549584054, guid: 6af54b4b14fbb6046a2dd57276f90004,
         type: 3}
+    - target: {fileID: 6786529087380329365, guid: 19954de30401f73428254541a9ad156e,
+        type: 3}
+      propertyPath: manualShootRangeMod
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19954de30401f73428254541a9ad156e, type: 3}
 --- !u!114 &1591393733 stripped

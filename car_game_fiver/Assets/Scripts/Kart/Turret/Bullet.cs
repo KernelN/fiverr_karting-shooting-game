@@ -14,7 +14,7 @@ using UnityEngine;
         Vector3 dir = target.position - transform.position;
         float distanceThisFrame = speed * Time.deltaTime;
         if(dir.magnitude <= distanceThisFrame ){
-            Debug.Log("update fn");
+            //Debug.Log("update fn");
             HitTarget();
             return;
         }
@@ -23,7 +23,7 @@ using UnityEngine;
 
      }
      void HitTarget(){
-        Debug.Log("we hit something");
+        //Debug.Log("we hit something");
         target.GetComponent<IHittable>()?.Hitted();
         GameObject effectIns = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
         Destroy(effectIns, 2f);

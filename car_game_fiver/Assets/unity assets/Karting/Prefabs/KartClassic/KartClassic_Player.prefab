@@ -446,6 +446,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6483482737525022469, guid: 36d0518107be8ae4d83256ed1b7e7594,
         type: 3}
+    - target: {fileID: 1130212048350801091, guid: 126c7e0ac8977364fb9498d7cc51ac77,
+        type: 3}
+      propertyPath: manualShootIsOn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1130212048351228128, guid: 126c7e0ac8977364fb9498d7cc51ac77,
         type: 3}
       propertyPath: m_RootOrder

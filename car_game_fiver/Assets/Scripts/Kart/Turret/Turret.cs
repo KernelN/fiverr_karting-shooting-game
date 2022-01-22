@@ -3,12 +3,13 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 public class Turret : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] private Transform target = null;
     [SerializeField] LayerMask enemyLayer;
     [Header("Attributes")]
     public float range = 15f;
     public float fireRate = 1f;
     public float searchRate = 0.5f;
+    public bool manualShootIsOn;
     private float fireCountDown = 0f;
 
     [Header("Unity Setup Fields")]
@@ -17,16 +18,17 @@ public class Turret : MonoBehaviour
 
     public GameObject bulletPrefab;
     public Transform firePoint;
+    [SerializeField] float manualShootRangeMod;
 
 
 
     void Start()
     {
         enemyLayer = LayerMask.GetMask(enemyLayerName);
-        UpdateTarget();
+        //UpdateTargetAuto();
     }
 
-    void UpdateTarget()
+    void UpdateTargetAuto()
     {
         RaycastHit[] Enemies;
         //cast a sphere and get every object in range inside the enemies layer
@@ -35,6 +37,7 @@ public class Turret : MonoBehaviour
         float shortestDistance = Mathf.Infinity;
         float distanceToEnemy;
 
+        //Check which enemy is closer to turret
         foreach (var Enemy in Enemies)
         {
             distanceToEnemy = Vector3.Distance(transform.position, Enemy.transform.position);
@@ -47,11 +50,31 @@ public class Turret : MonoBehaviour
             }
         }
 
+        //Check if closest enemy is within range
         if (shortestDistance <= range)
         {
             target = nearestEnemy;
         }
         else return;
+    }
+    void UpdateTargetManual()
+    {
+        //Get a enemy by clicking on it
+        RaycastHit enemyHitted;
+        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(cameraRay, out enemyHitted, Mathf.Infinity, enemyLayer))
+        {
+            Debug.Log("Not clicked on anything");
+            return;
+        }
+
+        //if a enemy was hitted, check if is in range
+        Transform enemy = enemyHitted.transform;
+        float distanceToEnemy = Vector3.Distance(transform.position, enemy.position);
+        if (distanceToEnemy <= range * manualShootRangeMod)
+        {
+            target = enemy;
+        }
     }
     float GetTargetDistance()
     {
@@ -60,34 +83,53 @@ public class Turret : MonoBehaviour
 
     void Update()
     {
-        if (target == null)
+        //Search for target if button is down
+        if (manualShootIsOn)
         {
-            if (fireCountDown > 0) //uses fire timer so it doesn't spherecast every frame (optimization)
+            if (Input.GetMouseButton(0))
             {
+                UpdateTargetManual();
+                if (target == null)
+                    Debug.Log("target get failed");
+            }
+
+            if (target == null)
+            {
+                return;
+            }
+        }
+        else if (target == null) //Search for target if there is none
+        {
+            //If timer is done, search for target (spherecast), else, advance timer
+            if (fireCountDown > 0)
+            {
+                //uses fire timer so it doesn't spherecast every frame (optimization)
                 AdvanceFireCountdown();
             }
             else
             {
-                Debug.Log("Searching Target");
-                UpdateTarget();
+                //Debug.Log("Searching Target");
+                UpdateTargetAuto();
+
                 fireCountDown = searchRate;
             }
             return;
         }
-        if (GetTargetDistance() > range)
+
+        //Check if target is still in range
+        if (!manualShootIsOn && GetTargetDistance() > range)
         {
             target = null;
             return;
         }
 
-        Vector3 dir = target.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = lookRotation.eulerAngles;
-        partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        //Rotate Turret Head to Target
+        RotateToTarget();
 
+        //Shoot if timer ended
         if (fireCountDown <= 0f)
         {
-            Debug.Log("working");
+            //Debug.Log("working");
             Shoot();
         }
         AdvanceFireCountdown();
@@ -99,12 +141,17 @@ public class Turret : MonoBehaviour
         fireCountDown -= Time.deltaTime;
     }
 
+    void RotateToTarget()
+    {
+        Vector3 dir = target.position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(dir);
+        Vector3 rotation = lookRotation.eulerAngles;
+        partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+    }
     void Shoot()
     {
         GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Bullet bullet = bulletGO.GetComponent<Bullet>();
-        //if(bullet != null)
-        Debug.Log("bullet found");
         bullet.Seek(target);
     }
 
